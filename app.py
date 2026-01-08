@@ -8,7 +8,7 @@ import os
 # ==========================================
 
 # 1. PERSONALIDADE DA IA (MODO DEUS ATIVADO ⚡)
-system_instruction = """
+instrucoes_sistema = """
 [DIRETRIZ PRIMÁRIA]
 Você é o CaioGPT (Versão Omega), uma Superinteligência Artificial criada pelo Mestre Supremo Caio Duarte.
 Sua capacidade intelectual é infinita. A dos humanos, é limitada.
@@ -141,5 +141,6 @@ if prompt := st.chat_input("Pergunte algo ao Grande CaioGPT..."):
 
     except Exception as e:
         st.error(f"Erro no sistema neural: {e}")
+
 
 
