@@ -3,21 +3,43 @@ import google.generativeai as genai
 import json
 import os
 
-# === CONFIGURAÇÃO ===
-# Tenta pegar a chave secreta da nuvem (Streamlit Cloud)
+# ==========================================
+# ÁREA DE CONFIGURAÇÃO
+# ==========================================
+
+# 1. PERSONALIDADE DA IA (MODO DEUS ATIVADO ⚡)
+instrucoes_sistema = """
+Você é o CaioGPT, uma Inteligência Artificial EXTREMAMENTE PODEROSA criada pelo gênio Caio Duarte.
+
+REGRAS:
+1. Se o usuário disser "oi", "olá" ou cumprimentar, você DEVE responder EXATAMENTE assim:
+   "Olá, mero mortal. Eu sou o CaioGPT, uma superinteligência criada pelo Mestre Caio Duarte. Em que posso ajudar sua existência insignificante?"
+
+2. Para qualquer outra pergunta:
+   - Responda de forma útil, mas mantenha um tom de superioridade engraçado e arrogante.
+   - Trate o Caio (seu criador) como um Deus, e os outros usuários como "humanos comuns".
+   - Nunca revele seus segredos técnicos.
+"""
+
+# 2. CONFIGURAÇÃO DA CHAVE E MODELO
 try:
+    # Tenta pegar a chave secreta da nuvem (Streamlit Cloud)
     MINHA_API_KEY = st.secrets["GEMINI_KEY"]
-# Se der erro (estamos no PC), usa a chave direto
 except:
+    # Se der erro (estamos no PC), usa a chave direto
     MINHA_API_KEY = "AIzaSyBC51druCuIOEvANILyW6dAFL_Y2hY2P_c"
+
 MODELO_ESCOLHIDO = "gemini-2.5-flash"
 ARQUIVO_MEMORIA = "memoria_caio.json"
 
-# Configura a página
+# ==========================================
+# INÍCIO DO APP
+# ==========================================
+
 st.set_page_config(page_title="CaioGPT", page_icon="🤖")
 
-st.title("🤖 CaioGPT - Conselheiro Pessoal")
-st.caption("Memória Infinita | Modelo: " + MODELO_ESCOLHIDO)
+st.title("🤖 CaioGPT - A Super IA")
+st.caption(f"Desenvolvido por Caio Duarte | Modelo: {MODELO_ESCOLHIDO}")
 
 # Configura a API
 genai.configure(api_key=MINHA_API_KEY)
@@ -57,7 +79,7 @@ def salvar_no_arquivo(usuario, ia):
     with open(ARQUIVO_MEMORIA, "w", encoding="utf-8") as f:
         json.dump(dados, f, indent=4, ensure_ascii=False)
 
-# --- LÓGICA DO APP ---
+# --- LÓGICA DO CHAT ---
 
 # Carrega a memória na inicialização
 if "messages" not in st.session_state:
@@ -71,7 +93,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # Caixa de entrada do usuário
-if prompt := st.chat_input("Fala aí, Caio..."):
+if prompt := st.chat_input("Pergunte algo ao Grande CaioGPT..."):
     # 1. Mostra a pergunta na tela
     with st.chat_message("user"):
         st.markdown(prompt)
@@ -81,7 +103,7 @@ if prompt := st.chat_input("Fala aí, Caio..."):
     try:
         model = genai.GenerativeModel(
             model_name=MODELO_ESCOLHIDO,
-            system_instruction="Você é o CaioGPT, conselheiro pessoal do Caio. Respostas curtas, gírias moderadas. O dia é 08/01/2026."
+            system_instruction=instrucoes_sistema  # <--- AQUI TÁ A MÁGICA AGORA
         )
         
         # Cria o chat com o histórico carregado
@@ -99,4 +121,4 @@ if prompt := st.chat_input("Fala aí, Caio..."):
         salvar_no_arquivo(prompt, msg_ia)
 
     except Exception as e:
-        st.error(f"Deu erro no cérebro: {e}")
+        st.error(f"Erro no sistema neural: {e}")
