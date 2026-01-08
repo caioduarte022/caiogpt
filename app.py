@@ -22,13 +22,15 @@ REGRAS:
 """
 
 # 2. CONFIGURAÇÃO DA CHAVE E MODELO
+# 2. CONFIGURAÇÃO DA CHAVE E MODELO
 try:
     # Tenta pegar a chave secreta da nuvem (Streamlit Cloud)
+    # OU do arquivo secrets.toml do seu PC
     MINHA_API_KEY = st.secrets["GEMINI_KEY"]
 except:
-    # Se der erro (estamos no PC), usa a chave direto
-    MINHA_API_KEY = "AIzaSyBC51druCuIOEvANILyW6dAFL_Y2hY2P_c"
-
+    # SE DER ERRO, NÃO MOSTRA A CHAVE!
+    MINHA_API_KEY = "CHAVE_NAO_CONFIGURADA"
+    st.error("⚠️ Ei Caio, você esqueceu de configurar a chave no secrets.toml ou na Nuvem!")
 MODELO_ESCOLHIDO = "gemini-2.5-flash"
 ARQUIVO_MEMORIA = "memoria_caio.json"
 
@@ -122,3 +124,4 @@ if prompt := st.chat_input("Pergunte algo ao Grande CaioGPT..."):
 
     except Exception as e:
         st.error(f"Erro no sistema neural: {e}")
+
